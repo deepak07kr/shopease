@@ -17,7 +17,7 @@ export default function Footer() {
           <div className="flex items-center gap-3 justify-center md:justify-start">
             <CreditCard className="w-8 h-8 text-blue-500 flex-shrink-0" />
             <div>
-              <h4 className="text-sm font-semibold text-white">Razorpay Payments</h4>
+              <h4 className="text-sm font-semibold text-white">Secure Razorpay Payments</h4>
               <p className="text-xs text-gray-400">100% Secure Checkout</p>
             </div>
           </div>
@@ -25,7 +25,7 @@ export default function Footer() {
             <RefreshCw className="w-8 h-8 text-blue-500 flex-shrink-0" />
             <div>
               <h4 className="text-sm font-semibold text-white">Easy Returns</h4>
-              <p className="text-xs text-gray-400">30-day hassle-free return</p>
+              <p className="text-xs text-gray-400">7-day hassle-free return</p>
             </div>
           </div>
           <div className="flex items-center gap-3 justify-center md:justify-start">
@@ -48,48 +48,51 @@ export default function Footer() {
             <span>ShopEase</span>
           </div>
           <p className="text-sm leading-relaxed text-gray-400">
-            A production-ready full-stack e-commerce site powered by Spring Boot 3, React, Redux Toolkit, Razorpay Gateway, and Kubernetes.
+            A production-ready full-stack e-commerce site powered by @Tote Niwas
           </p>
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Tech Stack</h4>
+          <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Registraion Details</h4>
           <ul className="space-y-2 text-xs">
-            <li>Java 17 & Spring Boot 3.3</li>
-            <li>Spring Security 6 (JWT)</li>
-            <li>React.js (Vite) & Tailwind CSS</li>
-            <li>Redux Toolkit & Axios</li>
-            <li>Razorpay Payment Integration</li>
+            <li><i class="fas fa-user"></i>👤 Production by Deepak</li>
+            <li><i class="fas fa-user"></i>👑 Owned by Ritesh</li>
+            <li><i class="fas fa-user"></i>📅 Co-owned by Suhana</li>
+            <li><i class="fas fa-user"></i>🏠  Tote Niwas </li>
+           
           </ul>
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">DevOps & Cloud</h4>
+          <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Important Details  </h4>
           <ul className="space-y-2 text-xs">
-            <li>Docker Multi-stage Builds</li>
-            <li>Docker Compose Infrastructure</li>
-            <li>Kubernetes Deployment YAMLs</li>
-            <li>MySQL 8.0 Persistence</li>
-            <li>Swagger OpenAPI Documentation</li>
+            <li>Sponserd by FF</li>
+            <li>Co-Sponserd by Supercell</li>
+            <li>Production by Brawl Stars</li>
+            <li>Directed by TMSL</li>
+           
           </ul>
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Portfolio Project</h4>
+          <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Location</h4>
+          <p className="text-xs leading-relaxed text-gray-400 mb-3">Abhishek Apartment</p>
           <p className="text-xs leading-relaxed text-gray-400 mb-3">
-            Designed and engineered for showcase in full-stack software development portfolios.
+            Ghospara, Kestopur, Kolkata 700102
           </p>
+          <p className="text-xs leading-relaxed text-gray-400 mb-3">West bengal</p>
           <div className="flex flex-wrap gap-2">
             <span className="px-2.5 py-1 text-[11px] font-medium bg-slate-800 text-blue-400 rounded-md border border-slate-700">Spring Boot 3</span>
             <span className="px-2.5 py-1 text-[11px] font-medium bg-slate-800 text-cyan-400 rounded-md border border-slate-700">React + Vite</span>
             <span className="px-2.5 py-1 text-[11px] font-medium bg-slate-800 text-emerald-400 rounded-md border border-slate-700">Razorpay</span>
             <span className="px-2.5 py-1 text-[11px] font-medium bg-slate-800 text-purple-400 rounded-md border border-slate-700">Kubernetes</span>
+            <span className="px-2.5 py-1 text-[11px] font-medium bg-slate-800 text-purple-400 rounded-md border border-slate-700">Docker</span>
           </div>
         </div>
       </div>
 
       <div className="border-t border-slate-800 py-6 text-center text-xs text-gray-500">
-        © {new Date().getFullYear()} ShopEase Platform. All rights reserved. Built for Resume Portfolio.
+        © {new Date().getFullYear()} ShopEase Platform. All rights reserved.
       </div>
     </footer>
   );
