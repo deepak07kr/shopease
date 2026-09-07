@@ -1,0 +1,90 @@
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  application:
+    name: shopease-backend
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:shopease_db}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:root}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:root123}}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+# JWT Configuration
+# IMPORTANT: JWT_SECRET below has a default only so the app runs out of the box
+# in local/dev Docker Compose. In any real deployment, override JWT_SECRET with
+# a long, random value via an environment variable / secret manager - never
+# rely on the default committed here.
+app:
+  # Where uploaded product images are stored on disk. In docker-compose this is
+  # backed by a named volume so images survive container restarts/rebuilds.
+  upload:
+    dir: ${UPLOAD_DIR:/app/uploads}
+
+  jwt:
+    secret: ${JWT_SECRET:9a4f2c8d7e1b5a3c8f2e9d1a4b7c3e5f8a2b4c6d9e1f3a5b7c9d0e2f4a6b8c1d}
+    expiration-ms: ${JWT_EXPIRATION_MS:900000}          # 15 minutes (short-lived access token)
+    refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000} # 7 days (longer-lived refresh token)
+
+  otp:
+    expiry-minutes: ${OTP_EXPIRY_MINUTES:10}
+    max-verify-attempts: ${OTP_MAX_VERIFY_ATTEMPTS:5}
+    resend-cooldown-seconds: ${OTP_RESEND_COOLDOWN_SECONDS:60}
+    max-resends-per-window: ${OTP_MAX_RESENDS_PER_WINDOW:5}
+    resend-window-minutes: ${OTP_RESEND_WINDOW_MINUTES:60}
+    # When true, the OTP is echoed back in API responses (devOtp) so the flow can be
+    # tested locally without a real email provider. NEVER enable this in production.
+    dev-mode: ${OTP_DEV_MODE:false}
+
+  security:
+    max-failed-logins: ${MAX_FAILED_LOGINS:5}
+    lockout-minutes: ${ACCOUNT_LOCKOUT_MINUTES:15}
+
+# Razorpay Configuration
+razorpay:
+  key-id: ${RAZORPAY_KEY_ID:rzp_test_TYJqD3XxO47dM2}
+  key-secret: ${RAZORPAY_KEY_SECRET:1NMr10ofakR5MXhkDjkL9XDk}
+
+# OpenAPI Configuration
+# Actuator - only the health endpoint is exposed (never info/env/beans/etc,
+# which can leak internals). Used for Docker/Kubernetes liveness & readiness
+# probes. Publicly readable is intentional and standard for a health check;
+# it reports UP/DOWN only, no sensitive detail.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha

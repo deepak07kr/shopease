@@ -1,0 +1,36 @@
+server:
+  port: 0
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:shopease_test;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: sa
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+app:
+  jwt:
+    secret: test-secret-key-for-unit-and-integration-tests-only-not-for-prod-0123456789
+    expiration-ms: 900000
+    refresh-expiration-ms: 604800000
+  otp:
+    expiry-minutes: 10
+    max-verify-attempts: 5
+    resend-cooldown-seconds: 60
+    max-resends-per-window: 5
+    resend-window-minutes: 60
+    dev-mode: true
+  security:
+    max-failed-logins: 5
+    lockout-minutes: 15
+
+razorpay:
+  key-id: test_key
+  key-secret: test_secret

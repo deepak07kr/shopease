@@ -1,0 +1,79 @@
+version: '3.8'
+
+# Every value below has a working local-dev default via ${VAR:-default} syntax,
+# so `docker compose up --build` still works out of the box with no setup.
+#
+# For a real deployment, copy .env.example to .env and fill in real values -
+# Docker Compose automatically loads a .env file in this same directory and
+# every ${VAR:-default} below will pick up your override instead of the dev
+# default. See DEPLOYMENT.md for the full walkthrough.
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: shopease-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${DB_NAME:-shopease_db}
+      MYSQL_USER: ${DB_USERNAME:-shopease_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-shopease_pass}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: shopease-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${DB_NAME:-shopease_db}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME:-shopease_user}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-shopease_pass}
+      # IMPORTANT: generate a real random value for production - see DEPLOYMENT.md
+      JWT_SECRET: ${JWT_SECRET:-9a4f2c8d7e1b5a3c8f2e9d1a4b7c3e5f8a2b4c6d9e1f3a5b7c9d0e2f4a6b8c1d}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-rzp_test_TYJqD3XxO47dM2}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-1NMr10ofakR5MXhkDjkL9XDk}
+      # Local-development-only: echoes the OTP in API responses so registration/
+      # login/forgot-password can be tested without a real email provider.
+      # Your .env for a real deployment should set this to "false".
+      OTP_DEV_MODE: ${OTP_DEV_MODE:-true}
+      # Only used when SPRING_PROFILES_ACTIVE=prod (see application-prod.yml)
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      MAIL_FROM: ${MAIL_FROM:-no-reply@shopease.local}
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - product_uploads:/app/uploads
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: shopease-frontend
+    restart: always
+    ports:
+      - "80:80"
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
+  product_uploads:
