@@ -21,6 +21,38 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: CLOUDINARY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: shopease-secret
+                  key: CLOUDINARY_URL
+            - name: SMTP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: shopease-secret
+                  key: SMTP_HOST
+            - name: SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: shopease-secret
+                  key: SMTP_PORT
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: shopease-secret
+                  key: SMTP_USERNAME
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: shopease-secret
+                  key: SMTP_PASSWORD
+            - name: MAIL_FROM
+              valueFrom:
+                secretKeyRef:
+                  name: shopease-secret
+                  key: MAIL_FROM
             - name: SPRING_DATASOURCE_URL
               valueFrom:
                 configMapKeyRef:

@@ -38,11 +38,6 @@ spring:
 # a long, random value via an environment variable / secret manager - never
 # rely on the default committed here.
 app:
-  # Where uploaded product images are stored on disk. In docker-compose this is
-  # backed by a named volume so images survive container restarts/rebuilds.
-  upload:
-    dir: ${UPLOAD_DIR:/app/uploads}
-
   jwt:
     secret: ${JWT_SECRET:9a4f2c8d7e1b5a3c8f2e9d1a4b7c3e5f8a2b4c6d9e1f3a5b7c9d0e2f4a6b8c1d}
     expiration-ms: ${JWT_EXPIRATION_MS:900000}          # 15 minutes (short-lived access token)
@@ -61,6 +56,12 @@ app:
   security:
     max-failed-logins: ${MAX_FAILED_LOGINS:5}
     lockout-minutes: ${ACCOUNT_LOCKOUT_MINUTES:15}
+
+# Cloudinary Configuration (product image uploads/CDN)
+# Format: cloudinary://<api_key>:<api_secret>@<cloud_name>
+# From https://console.cloudinary.com -> Dashboard -> "API Environment variable"
+cloudinary:
+  url: ${CLOUDINARY_URL:}
 
 # Razorpay Configuration
 razorpay:

@@ -23,7 +23,7 @@
         <razorpay.version>1.4.7</razorpay.version>
         <springdoc.version>2.5.0</springdoc.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
-    </properties>
+        <cloudinary.version>2.4.0</cloudinary.version>    </properties>
 
     <dependencies>
         <!-- Spring Boot Starters -->
@@ -88,6 +88,13 @@
             <groupId>com.razorpay</groupId>
             <artifactId>razorpay-java</artifactId>
             <version>${razorpay.version}</version>
+        </dependency>
+
+        <!-- Cloudinary SDK (product image storage/CDN) -->
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http5</artifactId>
+            <version>${cloudinary.version}</version>
         </dependency>
 
         <!-- OpenAPI Swagger Documentation -->

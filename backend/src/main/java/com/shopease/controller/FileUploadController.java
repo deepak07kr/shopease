@@ -23,7 +23,7 @@ public class FileUploadController {
     private final FileStorageService fileStorageService;
 
     @PostMapping(value = "/product-image", consumes = "multipart/form-data")
-    @Operation(summary = "Upload a product image", description = "Returns a relative URL to set as the product's imageUrl.")
+    @Operation(summary = "Upload a product image", description = "Uploads to Cloudinary and returns the full CDN URL to set as the product's imageUrl.")
     public ResponseEntity<FileUploadResponse> uploadProductImage(@RequestParam("file") MultipartFile file) {
         String url = fileStorageService.storeProductImage(file);
         return ResponseEntity.ok(FileUploadResponse.builder().url(url).build());
