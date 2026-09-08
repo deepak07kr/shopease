@@ -38,10 +38,13 @@ spring:
 # a long, random value via an environment variable / secret manager - never
 # rely on the default committed here.
 app:
+  upload:
+    dir: ${UPLOAD_DIR:/tmp/uploads} 
   jwt:
     secret: ${JWT_SECRET:9a4f2c8d7e1b5a3c8f2e9d1a4b7c3e5f8a2b4c6d9e1f3a5b7c9d0e2f4a6b8c1d}
     expiration-ms: ${JWT_EXPIRATION_MS:900000}          # 15 minutes (short-lived access token)
     refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000} # 7 days (longer-lived refresh token)
+     
 
   otp:
     expiry-minutes: ${OTP_EXPIRY_MINUTES:10}
