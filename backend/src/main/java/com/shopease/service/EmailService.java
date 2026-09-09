@@ -3,9 +3,15 @@ package com.shopease.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestClient;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Sends OTP codes via email.
@@ -37,7 +43,25 @@ public class EmailService {
     @Value("${app.mail.from:no-reply@shopease.local}")
     private String fromAddress;
 
+    // Brevo HTTP API key (https://app.brevo.com -> SMTP & API -> API keys).
+    // When set, OTPs are sent via Brevo's REST API over HTTPS instead of SMTP.
+    // This avoids Render's outbound SMTP port blocking (25/465/587) and Brevo's
+    // SMTP IP authorization, since API calls run over plain HTTPS (port 443).
+    @Value("${app.mail.brevo-api-key:}")
+    private String brevoApiKey;
+
+    private final RestClient brevoClient = RestClient.create();
+
     public void sendOtpEmail(String toEmail, String otpCode, String subject) {
+        String body = "Hello,\n\nYour ShopEase one-time code is: " + otpCode
+                + "\n\nThis code will expire shortly. If you did not request this, you can safely ignore this email.\n\nThank you,\nShopEase Team";
+        String finalSubject = subject != null ? subject : "ShopEase - Your Verification Code";
+
+        if (StringUtils.hasText(brevoApiKey)) {
+            sendViaBrevoApi(toEmail, finalSubject, body);
+            return;
+        }
+
         // Never log OTPs in a way that could end up in shipped/aggregated logs in
         // production - this console fallback exists purely for local development
         // where no real mail provider is configured.
@@ -53,12 +77,32 @@ public class EmailService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromAddress);
             message.setTo(toEmail);
-            message.setSubject(subject != null ? subject : "ShopEase - Your Verification Code");
-            message.setText("Hello,\n\nYour ShopEase one-time code is: " + otpCode
-                    + "\n\nThis code will expire shortly. If you did not request this, you can safely ignore this email.\n\nThank you,\nShopEase Team");
+            message.setSubject(finalSubject);
+            message.setText(body);
             mailSender.send(message);
         } catch (Exception e) {
             log.warn("Failed to send email via SMTP to {}: {}", toEmail, e.getMessage());
+        }
+    }
+
+    private void sendViaBrevoApi(String toEmail, String subject, String text) {
+        try {
+            brevoClient.post()
+                    .uri("https://api.brevo.com/v3/smtp/email")
+                    .header("api-key", brevoApiKey)
+                    .header("accept", "application/json")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of(
+                            "sender", Map.of("email", fromAddress, "name", "ShopEase"),
+                            "to", List.of(Map.of("email", toEmail)),
+                            "subject", subject,
+                            "textContent", text
+                    ))
+                    .retrieve()
+                    .toBodilessEntity();
+            log.info("OTP email sent via Brevo API to {}", toEmail);
+        } catch (Exception e) {
+            log.warn("Failed to send email via Brevo API to {}: {}", toEmail, e.getMessage());
         }
     }
 }

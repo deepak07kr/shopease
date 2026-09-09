@@ -12,6 +12,10 @@ app:
     dev-mode: false
   mail:
     from: ${MAIL_FROM}
+    # Brevo HTTP API key (https://app.brevo.com -> SMTP & API -> API keys).
+    # When set, OTPs are sent via Brevo's REST API over HTTPS, bypassing
+    # Render's blocked SMTP ports and Brevo's SMTP IP authorization entirely.
+    brevo-api-key: ${BREVO_API_KEY:}
 
 spring:
   mail:
