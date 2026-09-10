@@ -66,10 +66,10 @@ export default function Login() {
         {/* Demo Credentials Alert */}
         <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-xs space-y-1 text-blue-900">
           <div className="font-bold flex items-center gap-1.5 text-blue-800">
-            <ShieldCheck className="w-4 h-4 text-blue-600" /> Demo Credentials:
+            <ShieldCheck className="w-4 h-4 text-blue-600" /> Security & Authentication:
           </div>
-          <div><strong className="font-semibold">User:</strong> john@example.com / User@1234</div>
-          <div><strong className="font-semibold">Admin:</strong> admin@shopease.com / Admin@123</div>
+          <div><strong className="font-semibold">1:</strong> JWT-based authentication</div>
+          <div><strong className="font-semibold">2:</strong> OTP email verification</div>
         </div>
 
         {error && (
@@ -92,7 +92,7 @@ export default function Login() {
                 autoComplete="username"
                 value={formData.identifier}
                 onChange={handleChange}
-                placeholder="john@example.com or 9876543210"
+                placeholder="xyz@email.com  or 8709487760"
                 className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
               />
               <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
